@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://doqeevt7ixqqg"]
+
+[ext_resource type="Script" path="res://Scripts/PreProduction/BoardCreator.gd" id="1_l1n7e"]
+
+[node name="BoardCreator" type="Node3D"]
+script = ExtResource("1_l1n7e")
+pos = Vector2i(1, 2)
+fileName = "testMap.JSON"

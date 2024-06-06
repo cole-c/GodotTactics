@@ -1,0 +1,40 @@
+{
+	"version": "Alpha",
+	"tiles": [
+		{
+			"pos_x": 0,
+			"pos_z": 0,
+			"height": 3
+		},
+		{
+			"pos_x": -1,
+			"pos_z": 0,
+			"height": 1
+		},
+		{
+			"pos_x": 2,
+			"pos_z": 0,
+			"height": 1
+		},
+		{
+			"pos_x": 2,
+			"pos_z": -1,
+			"height": 3
+		},
+		{
+			"pos_x": 2,
+			"pos_z": 1,
+			"height": 1
+		},
+		{
+			"pos_x": 2,
+			"pos_z": 2,
+			"height": 2
+		},
+		{
+			"pos_x": 1,
+			"pos_z": 2,
+			"height": 1
+		}
+	]
+}
