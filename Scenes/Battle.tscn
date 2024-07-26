@@ -19,7 +19,7 @@ script = ExtResource("2_xvvci")
 
 [node name="Board" type="Node3D" parent="Battle Controller"]
 script = ExtResource("2_w06pt")
-pos = Vector2i(-3, 2)
+pos = Vector2i(-10, 3)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Battle Controller"]
 
