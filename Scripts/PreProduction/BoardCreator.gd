@@ -25,7 +25,26 @@ func _ready():
 	#set a seed in the RNG
 	_random.randomize()
 	
-func _process(delta):
+func _process(_delta):
+	InputMap.load_from_project_settings() #breaks if this is outside process
+	if Input.is_action_just_pressed("move_up"):
+		pos.x += 1
+		
+	if Input.is_action_just_pressed("move_down"):
+		pos.x -= 1
+		
+	if Input.is_action_just_pressed("move_left"):
+		pos.y -= 1
+		
+	if Input.is_action_just_pressed("move_right"):
+		pos.y += 1
+		
+	if Input.is_action_just_pressed("grow"):
+		Grow()
+		
+	if Input.is_action_just_pressed("shrink"):
+		Shrink()
+	
 	if pos != _oldPos:
 		_oldPos = pos
 		_UpdateMarker()
@@ -41,6 +60,7 @@ func Clear():
 	for key in tiles:
 		tiles[key].free()
 	tiles.clear()
+	pos = Vector2i(0,0)
 	
 func Grow():
 	_GrowSingle(pos)
@@ -57,6 +77,14 @@ func ShrinkArea():
 	_ShrinkRect(r)
 	
 func SaveJSON():
+	var saveFile = savePath + fileName
+	SaveMap(saveFile)
+	
+func LoadJSON():
+	var saveFile = savePath + fileName
+	LoadMap(saveFile)
+	
+func SaveMap(saveFile):
 	var main_dict = {
 		"version": "Alpha",
 		"tiles": []
@@ -70,14 +98,12 @@ func SaveJSON():
 		}
 		main_dict["tiles"].append(save_dict)
 		
-	var saveFile = savePath + fileName
 	var save_game = FileAccess.open(saveFile, FileAccess.WRITE)
 	
 	var json_string = JSON.stringify(main_dict, "\t", false)
 	save_game.store_line(json_string)
 	
-func LoadJSON():
-	var saveFile = savePath + fileName
+func LoadMap(saveFile):
 	if not FileAccess.file_exists(saveFile):
 		print("Error! We don't have a save to load")
 		return
@@ -104,7 +130,7 @@ func LoadJSON():
 		tiles[Vector2i(t.pos.x, t.pos.y)] = t
 	
 	save_game.close()
-	_UpdateMarker()
+	_UpdateMarker()	
 	
 func _GrowSingle(p: Vector2i):
 	var t: Tile = _GetOrCreate(p)

@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://m7xkmma1vsxl"]
+
+[ext_resource type="Script" path="res://Scripts/Controller/BattleController.gd" id="1_ql56p"]
+[ext_resource type="Script" path="res://Scripts/PreProduction/BoardCreator.gd" id="2_w06pt"]
+[ext_resource type="Script" path="res://Scripts/Controller/InputController.gd" id="2_xvvci"]
+[ext_resource type="Script" path="res://Scenes/CameraController.gd" id="4_dlx15"]
+[ext_resource type="Script" path="res://Scripts/Test/Test.gd" id="5_fs35q"]
+
+[node name="Battle" type="Node3D"]
+
+[node name="Battle Controller" type="Node" parent="." node_paths=PackedStringArray("board", "inputController", "cameraController")]
+script = ExtResource("1_ql56p")
+board = NodePath("Board")
+inputController = NodePath("Input Controller")
+cameraController = NodePath("Camera Controller")
+
+[node name="Input Controller" type="Node" parent="Battle Controller"]
+script = ExtResource("2_xvvci")
+
+[node name="Board" type="Node3D" parent="Battle Controller"]
+script = ExtResource("2_w06pt")
+pos = Vector2i(-3, 2)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Battle Controller"]
+
+[node name="Camera Controller" type="Node3D" parent="Battle Controller"]
+script = ExtResource("4_dlx15")
+
+[node name="Heading" type="Node3D" parent="Battle Controller/Camera Controller"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+
+[node name="Pitch" type="Node3D" parent="Battle Controller/Camera Controller/Heading"]
+transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Battle Controller/Camera Controller/Heading/Pitch"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+projection = 1
+size = 10.0
+
+[node name="Test" type="Node" parent="Battle Controller"]
+script = ExtResource("5_fs35q")
