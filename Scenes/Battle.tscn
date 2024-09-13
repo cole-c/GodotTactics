@@ -1,25 +1,39 @@
-[gd_scene load_steps=6 format=3 uid="uid://m7xkmma1vsxl"]
+[gd_scene load_steps=8 format=3 uid="uid://m7xkmma1vsxl"]
 
 [ext_resource type="Script" path="res://Scripts/Controller/BattleController.gd" id="1_ql56p"]
+[ext_resource type="Script" path="res://Scripts/Common/StateMachine/StateMachine.gd" id="2_g8elo"]
 [ext_resource type="Script" path="res://Scripts/PreProduction/BoardCreator.gd" id="2_w06pt"]
 [ext_resource type="Script" path="res://Scripts/Controller/InputController.gd" id="2_xvvci"]
+[ext_resource type="Script" path="res://Scripts/Controller/BattleState/InitBattleState.gd" id="3_apxao"]
 [ext_resource type="Script" path="res://Scenes/CameraController.gd" id="4_dlx15"]
-[ext_resource type="Script" path="res://Scripts/Test/Test.gd" id="5_fs35q"]
+[ext_resource type="Script" path="res://Scripts/Controller/BattleState/MoveTargetState.gd" id="4_fa5ps"]
 
 [node name="Battle" type="Node3D"]
 
-[node name="Battle Controller" type="Node" parent="." node_paths=PackedStringArray("board", "inputController", "cameraController")]
+[node name="Battle Controller" type="Node" parent="." node_paths=PackedStringArray("board", "inputController", "cameraController", "stateMachine", "startState")]
 script = ExtResource("1_ql56p")
 board = NodePath("Board")
 inputController = NodePath("Input Controller")
 cameraController = NodePath("Camera Controller")
+stateMachine = NodePath("StateMachine")
+startState = NodePath("StateMachine/Init Battle State")
+
+[node name="StateMachine" type="Node" parent="Battle Controller"]
+script = ExtResource("2_g8elo")
+
+[node name="Init Battle State" type="Node" parent="Battle Controller/StateMachine" node_paths=PackedStringArray("moveTargetState")]
+script = ExtResource("3_apxao")
+moveTargetState = NodePath("../Move Target State")
+
+[node name="Move Target State" type="Node" parent="Battle Controller/StateMachine"]
+script = ExtResource("4_fa5ps")
 
 [node name="Input Controller" type="Node" parent="Battle Controller"]
 script = ExtResource("2_xvvci")
 
 [node name="Board" type="Node3D" parent="Battle Controller"]
 script = ExtResource("2_w06pt")
-pos = Vector2i(-10, 3)
+pos = Vector2i(-69, -44)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Battle Controller"]
 
@@ -36,6 +50,3 @@ transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 projection = 1
 size = 10.0
-
-[node name="Test" type="Node" parent="Battle Controller"]
-script = ExtResource("5_fs35q")

@@ -1,11 +1,22 @@
 extends Node
 
+class_name ButtonRepeater
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+const _rate: int = 50
+var _next: int
+var _button: String
 
+func _init(limitButton:String):
+	_button = limitButton
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+func Update():
+	if Input.is_action_just_pressed(_button):
+		_next = Time.get_ticks_msec() + _rate
+		return true
+		
+	if Input.is_action_pressed(_button): 
+		if Time.get_ticks_msec() > _next:
+			_next = Time.get_ticks_msec() + _rate
+			return true
+			
+	return false

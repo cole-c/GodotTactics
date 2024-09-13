@@ -11,9 +11,11 @@ var tiles = {}
 var tileViewPrefab = preload("res://Prefabs/Tile.tscn")
 var tileSelectionIndicatorPrefab = preload("res://Materials/Tile_Selection_Indicator.tscn")
 var marker
+
 var _random = RandomNumberGenerator.new()
+
 var savePath = "res://Data/Levels/"
-@export var fileName = "defaultMap.JSON"
+@export var fileName = "testMap.JSON"
 
 func _ready():
 	#Instantiate the cursor
