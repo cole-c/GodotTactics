@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://3iu34khdmxxs"]
+[gd_scene load_steps=5 format=3 uid="uid://3iu34khdmxxs"]
 
+[ext_resource type="Script" path="res://Scripts/View Model Component/Unit.gd" id="1_ht8ri"]
 [ext_resource type="Material" uid="uid://bsnpet8u25cmk" path="res://Materials/Ally.tres" id="1_q8o13"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_qubgk"]
@@ -7,6 +8,7 @@
 [sub_resource type="SphereMesh" id="SphereMesh_6dk76"]
 
 [node name="Hero" type="Node3D"]
+script = ExtResource("1_ht8ri")
 
 [node name="Jumper" type="Node3D" parent="."]
 
@@ -22,3 +24,5 @@ mesh = SubResource("SphereMesh_6dk76")
 [node name="Eye2" type="MeshInstance3D" parent="Jumper/Body"]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -0.17, 0.32, 0.3)
 mesh = SubResource("SphereMesh_6dk76")
+
+[node name="Movement" type="Node" parent="."]

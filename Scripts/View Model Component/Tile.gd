@@ -2,6 +2,11 @@
 extends Node
 class_name Tile
 
+var content: Node
+
+var prev: Tile
+var distance: int
+
 const stepHeight: float = 0.25
 var pos: Vector2i
 var height: int

@@ -12,10 +12,14 @@ var tileViewPrefab = preload("res://Prefabs/Tile.tscn")
 var tileSelectionIndicatorPrefab = preload("res://Materials/Tile_Selection_Indicator.tscn")
 var marker
 
+var selectedTileColor:Color = Color(0, 1, 1, 1)
+var defaultTileColor:Color = Color(1, 1, 1, 1)
+
 var _random = RandomNumberGenerator.new()
 
 var savePath = "res://Data/Levels/"
 @export var fileName = "testMap.JSON"
+
 
 func _ready():
 	#Instantiate the cursor
@@ -28,24 +32,24 @@ func _ready():
 	_random.randomize()
 	
 func _process(_delta):
-	InputMap.load_from_project_settings() #breaks if this is outside process
-	if Input.is_action_just_pressed("move_up"):
-		pos.x += 1
-		
-	if Input.is_action_just_pressed("move_down"):
-		pos.x -= 1
-		
-	if Input.is_action_just_pressed("move_left"):
-		pos.y -= 1
-		
-	if Input.is_action_just_pressed("move_right"):
-		pos.y += 1
-		
-	if Input.is_action_just_pressed("grow"):
-		Grow()
-		
-	if Input.is_action_just_pressed("shrink"):
-		Shrink()
+	##InputMap.load_from_project_settings() #breaks if this is outside process
+	##if Input.is_action_just_pressed("move_up"):
+	##	pos.x += 1
+	##	
+	##if Input.is_action_just_pressed("move_down"):
+	##	pos.x -= 1
+	##	
+	##if Input.is_action_just_pressed("move_left"):
+	##	pos.y -= 1
+	##	
+	##if Input.is_action_just_pressed("move_right"):
+	##	pos.y += 1
+	##	
+	##if Input.is_action_just_pressed("grow"):
+	##	Grow()
+	##	
+	##if Input.is_action_just_pressed("shrink"):
+	##	Shrink()
 	
 	if pos != _oldPos:
 		_oldPos = pos
@@ -185,3 +189,68 @@ func _ShrinkRect(rect: Rect2i):
 		for x in range(rect.position.x, rect.end.x):
 			var p = Vector2i(x, y)
 			_ShrinkSingle(p)
+
+func ClearSearch():
+	for key in tiles:
+		tiles[key].prev = null
+		tiles[key].distance = 2147483647 #max signed 32bit number
+
+func GetTile(p: Vector2i):
+	return tiles[p] if tiles.has(p) else null
+
+func Search(start: Tile, addTile: Callable):
+	var retValue = []
+	retValue.append(start)  
+	ClearSearch()
+	var checkNext = []
+	
+	start.distance = 0
+	checkNext.push_back(start)
+	
+	var _dirs = [Vector2i(0,1), Vector2i(0,-1), Vector2i(1,0), Vector2i(-1,0)]
+	
+	while checkNext.size() > 0:
+		var t:Tile = checkNext.pop_front()
+		
+		#If multiple paths between two points with the same length exist, this will randomize them
+		#_dirs.shuffle() #Optional. May impact performance. 
+		
+		for i in _dirs.size():
+			var next:Tile = GetTile(t.pos + _dirs[i])
+			if next == null || next.distance <= t.distance + 1:
+				continue
+			
+			if addTile.call(t, next):
+				next.distance = t.distance + 1
+				next.prev = t
+				checkNext.push_back(next)
+				retValue.append(next)
+	return retValue
+
+func SelectTiles(tileList:Array):	
+	for i in tileList.size():
+		tileList[i].get_node("MeshInstance3D").material_override.albedo_color = selectedTileColor
+
+func DeSelectTiles(tileList:Array):
+	for i in tileList.size():
+		tileList[i].get_node("MeshInstance3D").material_override.albedo_color = defaultTileColor
+
+func RangeSearch(start: Tile, addTile: Callable, range: int):
+	var retValue = []
+	ClearSearch()
+	start.distance = 0
+	
+	for y in range(-range, range+1):
+		for x in range(-range + abs(y), range - abs(y) +1):
+			var next:Tile = GetTile(start.pos + Vector2i(x,y))
+			if next == null:
+				continue
+				
+			if next == start:
+				retValue.append(start)
+			elif addTile.call(start, next):
+				next.distance = (abs(x) + abs(y))
+				next.prev = start
+				retValue.append(next)
+	
+	return retValue

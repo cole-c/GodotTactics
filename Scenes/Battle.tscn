@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://m7xkmma1vsxl"]
+[gd_scene load_steps=10 format=3 uid="uid://m7xkmma1vsxl"]
 
 [ext_resource type="Script" path="res://Scripts/Controller/BattleController.gd" id="1_ql56p"]
 [ext_resource type="Script" path="res://Scripts/Common/StateMachine/StateMachine.gd" id="2_g8elo"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://Scripts/Controller/BattleState/InitBattleState.gd" id="3_apxao"]
 [ext_resource type="Script" path="res://Scenes/CameraController.gd" id="4_dlx15"]
 [ext_resource type="Script" path="res://Scripts/Controller/BattleState/MoveTargetState.gd" id="4_fa5ps"]
+[ext_resource type="Script" path="res://Scripts/Controller/BattleState/SelectUnitState.gd" id="5_kqbmp"]
+[ext_resource type="Script" path="res://Scripts/Controller/BattleState/MoveSequenceState.gd" id="6_ib6uk"]
 
 [node name="Battle" type="Node3D"]
 
@@ -21,19 +23,27 @@ startState = NodePath("StateMachine/Init Battle State")
 [node name="StateMachine" type="Node" parent="Battle Controller"]
 script = ExtResource("2_g8elo")
 
-[node name="Init Battle State" type="Node" parent="Battle Controller/StateMachine" node_paths=PackedStringArray("moveTargetState")]
+[node name="Init Battle State" type="Node" parent="Battle Controller/StateMachine" node_paths=PackedStringArray("selectUnitState")]
 script = ExtResource("3_apxao")
-moveTargetState = NodePath("../Move Target State")
+selectUnitState = NodePath(".")
 
-[node name="Move Target State" type="Node" parent="Battle Controller/StateMachine"]
+[node name="Move Target State" type="Node" parent="Battle Controller/StateMachine" node_paths=PackedStringArray("MoveSequenceState")]
 script = ExtResource("4_fa5ps")
+MoveSequenceState = NodePath(".")
+
+[node name="Select Unit State" type="Node" parent="Battle Controller/StateMachine" node_paths=PackedStringArray("moveTargetState")]
+script = ExtResource("5_kqbmp")
+moveTargetState = NodePath(".")
+
+[node name="Move Sequence State" type="Node" parent="Battle Controller/StateMachine" node_paths=PackedStringArray("SelectUnitState")]
+script = ExtResource("6_ib6uk")
+SelectUnitState = NodePath(".")
 
 [node name="Input Controller" type="Node" parent="Battle Controller"]
 script = ExtResource("2_xvvci")
 
 [node name="Board" type="Node3D" parent="Battle Controller"]
 script = ExtResource("2_w06pt")
-pos = Vector2i(-69, -44)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Battle Controller"]
 
